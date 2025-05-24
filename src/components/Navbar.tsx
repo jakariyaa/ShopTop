@@ -7,6 +7,7 @@ export function Navbar() {
   const { isOpen, openCart, cartQuantity } = useShoppingCart();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // NEW
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +30,27 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between py-3 px-4 relative">
+        <button
+          className="md:hidden flex flex-col justify-center items-center w-10 h-10 px-3 py-1 border-2 border-blue-700 rounded-xl"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          aria-label="Toggle navigation"
+        >
+          <span
+            className={`block h-0.5 w-6 bg-blue-700 mb-1 transition-transform ${
+              mobileMenuOpen ? "rotate-45 translate-y-2" : ""
+            }`}
+          ></span>
+          <span
+            className={`block h-0.5 w-6 bg-blue-700 mb-1 transition-opacity ${
+              mobileMenuOpen ? "opacity-0" : ""
+            }`}
+          ></span>
+          <span
+            className={`block h-0.5 w-6 bg-blue-700 transition-transform ${
+              mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+            }`}
+          ></span>
+        </button>
         <div className="flex items-center gap-2">
           <Link
             to="/"
@@ -37,7 +59,7 @@ export function Navbar() {
             ShopTop
           </Link>
         </div>
-        <ul className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center space-x-8">
+        <ul className="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
           {navLinks.map((link) => (
             <li key={link.to}>
               <Link
@@ -53,6 +75,25 @@ export function Navbar() {
             </li>
           ))}
         </ul>
+        {mobileMenuOpen && (
+          <ul className="md:hidden absolute top-full left-0 w-full bg-blue-50 shadow-lg flex flex-col items-center space-y-2 py-4 z-50">
+            {navLinks.map((link) => (
+              <li key={link.to}>
+                <Link
+                  to={link.to}
+                  className={`block text-lg font-medium px-4 py-2 transition ${
+                    location.pathname === link.to
+                      ? "text-blue-600 border-2 rounded-2xl border-blue-600"
+                      : "text-gray-700 hover:text-blue-600"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
         <div className="relative">
           <button
             className="relative flex items-center gap-2 bg-blue-600 text-white px-3 py-2 rounded-lg shadow hover:bg-blue-700 transition"
